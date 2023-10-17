@@ -1,24 +1,24 @@
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Conv2D, Dense, GlobalMaxPooling2D
 from tensorflow.keras.applications import VGG16
+from tensorflow.keras.models import load_model
 import tensorflow as tf
 from LoadImagesLabelsToTF import train, test, val
 
-"""vgg = VGG16(include_top=False)
-vgg.summary()"""
+
 def build_model():
     input_layer = Input(shape=(120, 120, 3))
 
     vgg = VGG16(include_top=False)(input_layer)
 
-    # Classification model
     f1 = GlobalMaxPooling2D()(vgg)
+
+    # Classification model
     class1 = Dense(2048, activation="relu")(f1)
     class2 = Dense(1, activation="sigmoid")(class1)
 
     # Bounding box model
-    f2 = GlobalMaxPooling2D()(vgg)
-    regress1 = Dense(2048, activation="relu")(f2)
+    regress1 = Dense(2048, activation="relu")(f1)
     regress2 = Dense(4, activation="sigmoid")(regress1)
 
     facetracker = Model(inputs=input_layer, outputs=[class2, regress2])
@@ -31,7 +31,8 @@ print(facetracker.summary())
 # Losses and Optimizer
 batches_per_epoch = len(train)
 lr_decay = (1./0.75 -1)/batches_per_epoch
-opt = tf.keras.optimizers.Adam(learning_rate=0.0001, decay=lr_decay)
+opt = tf.keras.optimizers.legacy.Adam(learning_rate=0.0001, decay=lr_decay)
+
 
 def localization_loss(y_true, y_hat):
     delta_coord = tf.reduce_sum(tf.square(y_true[:, :2] - y_hat[:, :2]))
@@ -46,8 +47,10 @@ def localization_loss(y_true, y_hat):
 
     return delta_coord + delta_size
 
+
 classlos = tf.keras.losses.BinaryCrossentropy()
 regresslos = localization_loss
+
 
 class FaceTracker(Model):
     def __init__(self, model, **kwargs):
@@ -81,10 +84,17 @@ class FaceTracker(Model):
         classes, coords = self.model(X, training=False)
 
         batch_classloss = self.closs(y[0], classes)
-        batch_regressloss = self.lloss(tf.cast(y[1], tf.float32), coords)
+        batch_localizationloss = self.lloss(tf.cast(y[1], tf.float32), coords)
 
-        total_loss = batch_regressloss + 0.5 * batch_classloss
-        return {"total_loss": total_loss, "class_loss": batch_classloss, "regress_loss": batch_regressloss}
+        total_loss = batch_localizationloss + 0.5 * batch_classloss
+        return {"total_loss": total_loss, "class_loss": batch_classloss, "regress_loss": batch_localizationloss}
 
     def call(self, X, **kwargs):
         return self.model(X, **kwargs)
+
+
+model = FaceTracker(facetracker)
+model.compile(opt, classlos, regresslos)
+hist = model.fit(train, epochs=1, validation_data=val)
+print("finished")
+facetracker.save("facetracker")
