@@ -4,13 +4,14 @@ from time import sleep
 import cv2
 from tensorflow.keras.models import load_model
 
-width, height = 360, 240
+width, height = 120, 120
 fbRange = [6200, 6800]
 pid = [0.4, 0.4, 0]
 p_error = 0
 
 drone = tello.Tello()
 drone.connect()
+print(drone.get_battery())
 drone.streamon()
 drone.takeoff()
 drone.send_rc_control(0,0,25,0)
@@ -32,8 +33,8 @@ def findFace(img):
     my_face_list_area = []
 
     face = facetracker.predict(img)
-    x_1, y_1 = tuple(np.multiply(face[1][0][:2], [360, 240]).astype(int))
-    x_2, y_2 = tuple(np.multiply(face[1][0][2:], [360, 240]).astype(int))
+    x_1, y_1 = tuple(np.multiply(face[1][0][:2], [width, height]).astype(int))
+    x_2, y_2 = tuple(np.multiply(face[1][0][2:], [width, height]).astype(int))
     w = abs(x_1-x_2)
     h = abs(y_1-y_2)
     c_x = (x_1+x_2) // 2

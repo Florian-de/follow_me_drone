@@ -95,6 +95,6 @@ class FaceTracker(Model):
 
 model = FaceTracker(facetracker)
 model.compile(opt, classlos, regresslos)
-hist = model.fit(train, epochs=1, validation_data=val)
+hist = model.fit(train, epochs=10, validation_data=val)
 print("finished")
 facetracker.save("facetracker")
