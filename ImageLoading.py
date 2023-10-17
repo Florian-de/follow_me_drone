@@ -16,7 +16,7 @@ for gpu in gpus:
 print(f"GPU is available: {tf.test.is_gpu_available()}")
 """
 
-images = tf.data.Dataset.list_files(os.path.join("data", "images", "*.jpg") ,shuffle=True)
+#images = tf.data.Dataset.list_files(os.path.join("data", "images", "*.jpg") ,shuffle=True)
 
 
 def load_image(path):
@@ -25,7 +25,7 @@ def load_image(path):
     return img
 
 
-images = images.map(load_image)
+"""images = images.map(load_image)
 
 image_generator = images.batch(4).as_numpy_iterator()
 plot_images = image_generator.next()
@@ -42,4 +42,4 @@ for folder in ["train", "test", "val"]:
         existing_filepath = os.path.join("data", "labels", filename)
         if os.path.exists(existing_filepath):
             new_filepath = os.path.join("data", folder, "labels", filename)
-            os.replace(existing_filepath, new_filepath)
+            os.replace(existing_filepath, new_filepath)"""
