@@ -10,11 +10,13 @@ NUMBER_IMAGES = 30
 
 # Gather data
 cap = cv2.VideoCapture(0)
+time.sleep(2)
 for imgnum in range(NUMBER_IMAGES):
     print(f"Collecting image {imgnum}")
     ret, frame = cap.read()
-    imgname = os.path.join(IMAGES_PATH, f"{str(uuid.uuid1())}.jpg")
-    cv2.imwrite(imgname, frame)
+    frame = cv2.resize(frame, (450, 450))
+    img_name = os.path.join(IMAGES_PATH, f"{str(uuid.uuid1())}.jpg")
+    cv2.imwrite(img_name, frame)
     cv2.imshow("frame", frame)
     time.sleep(0.5)
 

@@ -4,7 +4,7 @@ import albumentations as alb
 import cv2
 import os
 
-augmentor = alb.Compose([alb.RandomCrop(width=1080, height=1080),
+augmentor = alb.Compose([alb.RandomCrop(width=450, height=450),
                          alb.HorizontalFlip(p=0.5),
                          alb.RandomBrightnessContrast(p=0.2),
                          alb.RandomGamma(p=0.2),
@@ -26,7 +26,7 @@ for partition in ["test", "train", "val"]:
             coords[1] = label["shapes"][0]["points"][0][1]
             coords[2] = label["shapes"][0]["points"][1][0]
             coords[3] = label["shapes"][0]["points"][1][1]
-            coords = list(np.divide(coords, [1920, 1080, 1920, 1080]))
+            coords = list(np.divide(coords, [450, 450, 450, 450]))
         try:
             for x in range(60):
                 augmented = augmentor(image=img, bboxes=[coords], class_labels=["face"])

@@ -95,6 +95,8 @@ class FaceTracker(Model):
 
 model = FaceTracker(facetracker)
 model.compile(opt, classlos, regresslos)
-hist = model.fit(train, epochs=10, validation_data=val)
+logdir='logs'
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=logdir)
+hist = model.fit(train, epochs=10, validation_data=val, callbacks=[tensorboard_callback])
 print("finished")
 facetracker.save("facetracker")

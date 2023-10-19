@@ -3,6 +3,7 @@ from djitellopy import tello
 from time import sleep
 import cv2
 from tensorflow.keras.models import load_model
+import tensorflow as tf
 
 width, height = 120, 120
 fbRange = [6200, 6800]
@@ -16,7 +17,7 @@ drone.streamon()
 drone.takeoff()
 drone.send_rc_control(0,0,25,0)
 sleep(2.2)
-
+drone.send_rc_control(0,0,0,0)
 facetracker = load_model("facetracker")
 
 def findFace(img):
@@ -76,8 +77,10 @@ def trackFace(drone, info, width, pid, pError):
 
 while True:
     img = drone.get_frame_read().frame
-    img = cv2.resize(img, (width, height))
-    img, info = findFace(img)
+    rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    img = tf.image.resize(rgb, (width, height))
+    #img = cv2.resize(img, (width, height))
+    img, info = findFace(np.expand_dims(img/255, 0))
     p_error = trackFace(drone, info, width, pid, p_error)
     cv2.imshow("Output", img)
     if cv2.waitKey(1) & 0xFF == ord("q"):
