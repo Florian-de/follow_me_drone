@@ -16,15 +16,15 @@ for gpu in gpus:
 print(f"GPU is available: {tf.test.is_gpu_available()}")
 """
 
-images = tf.data.Dataset.list_files(os.path.join("data", "images", "*.jpg") ,shuffle=True)
+"""images = tf.data.Dataset.list_files(os.path.join("data", "images", "*.jpg") ,shuffle=True)"""
 
 
-def load_image(path):
-    byte_img = tf.io.read_file(path)
+def load_image(x):
+    byte_img = tf.io.read_file(x)
     img = tf.io.decode_jpeg(byte_img)
     return img
 
-
+"""
 images = images.map(load_image)
 
 image_generator = images.batch(4).as_numpy_iterator()
@@ -33,14 +33,14 @@ plot_images = image_generator.next()
 fig, ax = plt.subplots(ncols=4, figsize=(20, 20))
 for idx, image in enumerate(plot_images):
     ax[idx].imshow(image)
-plt.show()
+plt.show()"""
 
 # moved images manually 70/15/15 to train, test, val, now move labels
-
+"""
 for folder in ["train", "test", "val"]:
     for file in os.listdir(os.path.join("data", folder, "images")):
         filename = file.split(".")[0]+".json"
         existing_filepath = os.path.join("data", "labels", filename)
         if os.path.exists(existing_filepath):
             new_filepath = os.path.join("data", folder, "labels", filename)
-            os.replace(existing_filepath, new_filepath)
+            os.replace(existing_filepath, new_filepath)"""
