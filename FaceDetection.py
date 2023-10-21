@@ -31,7 +31,7 @@ print(facetracker.summary())
 # Losses and Optimizer
 batches_per_epoch = len(train)
 lr_decay = (1./0.75 -1)/batches_per_epoch
-opt = tf.keras.optimizers.legacy.Adam(learning_rate=0.0001, decay=lr_decay)
+opt = tf.keras.optimizers.legacy.Adam(learning_rate=0.00001, decay=lr_decay)
 
 
 def localization_loss(y_true, yhat):

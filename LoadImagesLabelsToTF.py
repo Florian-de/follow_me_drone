@@ -71,7 +71,7 @@ print(len(train_images), len(train_labels), len(test_images), len(test_labels), 
 train = create_shuffled_dataset(train_images, train_labels)
 test = create_shuffled_dataset(test_images, test_labels)
 val = create_shuffled_dataset(val_images, val_labels)
-
+"""
 # show batches for testing purposes
 res = train.as_numpy_iterator().next()
 fig, ax = plt.subplots(ncols=4, figsize=(20, 20))
@@ -84,4 +84,4 @@ for idx in range(4):
                   tuple(np.multiply(sample_coords[2:], [120, 120]).astype(int)),
                   (255, 0, 0), 2)
 
-    ax[idx].imshow(sample_image)
+    ax[idx].imshow(sample_image)"""
