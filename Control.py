@@ -62,6 +62,10 @@ def trackFace(drone, info, width, pid, pError):
     speed = int(np.clip(speed, -100, 100))
     fb = 0
 
+    # rotate drone to find face if there is none
+    if area == 0.0:
+        speed = 20
+
     if area > fbRange[0] and area < fbRange[1]:
         fb = 0
     if area > fbRange[1]:
@@ -78,8 +82,6 @@ def trackFace(drone, info, width, pid, pError):
 while True:
     img = drone.get_frame_read().frame
     rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    img = tf.image.resize(rgb, (width, height))
-    #img = cv2.resize(img, (width, height))
     img, info = findFace(np.expand_dims(img/255, 0))
     p_error = trackFace(drone, info, width, pid, p_error)
     cv2.imshow("Output", img)

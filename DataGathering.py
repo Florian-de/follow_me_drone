@@ -7,8 +7,6 @@ import cv2
 # Constants
 IMAGES_PATH = os.path.join("data", "images")
 NUMBER_IMAGES = 30
-WIDTH = 450
-HEIGHT = 450
 
 # Gather data
 cap = cv2.VideoCapture(0)
@@ -16,7 +14,6 @@ time.sleep(5)
 for imgnum in range(NUMBER_IMAGES):
     print(f"Collecting image {imgnum}")
     ret, frame = cap.read()
-    frame = cv2.resize(frame, (WIDTH, HEIGHT))
     img_name = os.path.join(IMAGES_PATH, f"{str(uuid.uuid1())}.jpg")
     cv2.imwrite(img_name, frame)
     cv2.imshow("frame", frame)

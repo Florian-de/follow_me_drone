@@ -26,7 +26,7 @@ for partition in ["test", "train", "val"]:
             coords[1] = label["shapes"][0]["points"][0][1]
             coords[2] = label["shapes"][0]["points"][1][0]
             coords[3] = label["shapes"][0]["points"][1][1]
-            coords = list(np.divide(coords, [450, 450, 450, 450]))
+            coords = list(np.divide(coords, [1920, 1080, 1920, 1080]))
         try:
             for x in range(60):
                 augmented = augmentor(image=img, bboxes=[coords], class_labels=["face"])
